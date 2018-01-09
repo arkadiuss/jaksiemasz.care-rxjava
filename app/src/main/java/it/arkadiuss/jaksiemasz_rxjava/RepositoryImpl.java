@@ -4,12 +4,8 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -44,18 +40,8 @@ public class RepositoryImpl implements Repository {
         api.getPeople()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(new Consumer<List<Person>>() {
-                    @Override
-                    public void accept(List<Person> people) throws Exception {
-                        callback.onSuccess(people);
-                    }
-                })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        callback.onError(throwable);
-                    }
-                })
+                .doOnSuccess(people->callback.onSuccess(people))
+                .doOnError(throwable -> callback.onError(throwable))
                 .subscribe();
     }
 
@@ -65,18 +51,8 @@ public class RepositoryImpl implements Repository {
         api.getPeople(searchPhrase)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSuccess(new Consumer<List<Person>>() {
-                    @Override
-                    public void accept(List<Person> people) throws Exception {
-                        callback.onSuccess(people);
-                    }
-                })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        callback.onError(throwable);
-                    }
-                })
+                .doOnSuccess(people -> callback.onSuccess(people))
+                .doOnError(throwable -> callback.onError(throwable))
                 .subscribe();
     }
 }
