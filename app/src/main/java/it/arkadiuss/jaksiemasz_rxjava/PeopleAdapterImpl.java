@@ -43,7 +43,9 @@ public class PeopleAdapterImpl extends RecyclerView.Adapter<PeopleAdapterImpl.Vi
             ButterKnife.bind(this,itemView);
         }
     }
-
+    public PeopleAdapterImpl(){
+        people=new ArrayList<>();
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(((LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.item_person,parent,false));

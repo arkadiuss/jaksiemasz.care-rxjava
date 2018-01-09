@@ -13,5 +13,6 @@ interface MainContract {
         void attach(View view);
         void detach();
         void loadPeople();
+        void onSearchButtonClick(String searchPhrase);
     }
 }

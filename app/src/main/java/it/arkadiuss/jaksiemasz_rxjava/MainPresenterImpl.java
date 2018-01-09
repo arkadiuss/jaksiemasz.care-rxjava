@@ -44,4 +44,24 @@ public class MainPresenterImpl implements MainContract.Presenter {
             }
         });
     }
+
+    @Override
+    public void onSearchButtonClick(String searchPhrase) {
+        loadSearchedContact(searchPhrase);
+    }
+
+    private void loadSearchedContact(String searchPhrase){
+        repository.getPeople(searchPhrase,new RepositoryCallback() {
+            @Override
+            public void onSuccess(List<Person> people) {
+                EventBus.getDefault().post(new MessageEvent(people));
+                view.updatePeopleView();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+        });
+    }
 }

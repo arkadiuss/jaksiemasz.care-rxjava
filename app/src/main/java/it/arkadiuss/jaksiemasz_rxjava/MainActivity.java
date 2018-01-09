@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private MainContract.Presenter presenter;
@@ -45,5 +46,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void updatePeopleView() {
         peopleAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick(R.id.seach_button)
+    public void search(){
+        presenter.onSearchButtonClick(searchField.getText().toString());
     }
 }
