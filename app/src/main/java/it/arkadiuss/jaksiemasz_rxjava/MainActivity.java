@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +17,10 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Consumer;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -24,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.search_field) EditText searchField;
     @BindView(R.id.seach_button) Button searchButton;
     private PeopleAdapterImpl peopleAdapter;
-    private Subscription searchSubs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +45,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         peopleView.setLayoutManager(new LinearLayoutManager(this));
         peopleAdapter.registerEventBus();
         presenter.loadPeople();
-        searchSubs= RxTextView.textChanges(searchField)
-                .subscribe(charSequence -> presenter.onSearchTextChanged(charSequence.toString()));
+        Observable<String> textChangedObservable =
+                Observable.create(new RxEditTextOnSubscibe(searchField));
+        textChangedObservable
+                .doOnNext(s -> presenter.onSearchTextChanged(s))
+                .subscribe();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        searchSubs.unsubscribe();
         presenter.detach();
         peopleAdapter.unregisterEventBus();
     }
