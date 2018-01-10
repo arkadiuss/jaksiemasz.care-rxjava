@@ -14,5 +14,6 @@ interface MainContract {
         void detach();
         void loadPeople();
         void onSearchButtonClick(String searchPhrase);
+        void onSearchTextChanged(String searchText);
     }
 }

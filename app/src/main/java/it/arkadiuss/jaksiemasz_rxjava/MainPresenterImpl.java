@@ -50,6 +50,12 @@ public class MainPresenterImpl implements MainContract.Presenter {
         loadSearchedContact(searchPhrase);
     }
 
+    @Override
+    public void onSearchTextChanged(String searchText) {
+        if(searchText.length()<2) loadPeople();
+        else loadSearchedContact(searchText);
+    }
+
     private void loadSearchedContact(String searchPhrase){
         repository.getPeople(searchPhrase,new RepositoryCallback() {
             @Override
